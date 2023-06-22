@@ -1,21 +1,4 @@
-const users = [
-	{
-		name: 'user1',
-		points: 200000,
-	},
-	{
-		name: 'user2',
-		points: 40,
-	},
-	{
-		name: 'user3',
-		points: 3000,
-	},
-	{
-		name: 'user4',
-		points: 15600,
-	},
-];
+import { users } from '@/users-mock';
 
 export default function LeaderBoard() {
 	return (
