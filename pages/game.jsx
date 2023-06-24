@@ -1,12 +1,13 @@
+import { Button } from '@mui/material';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import LeaderBoard from './leader-board';
 
 export default function Game() {
 	const [result, setResult] = useState('');
 	const selectedUser = useSelector((state) => state.selectedUser);
 	const dispatch = useDispatch();
+	let isBtnDisabled = false;
 
 	const handleRollClick = async () => {
 		const randomNumber = generateRandomNumber();
@@ -32,17 +33,13 @@ export default function Game() {
 		const updatedUsers = await fetchUsers(); // Fetch the updated user
 
 		dispatch({
-			type: 'SELECT_USER',
-			payload: updatedUser,
-		});
-
-		dispatch({
 			type: 'SET_USERS',
 			payload: updatedUsers, // Update the users in the store
 		});
 	};
 
 	const updateUserPoints = async (updatedUser) => {
+		isBtnDisabled = true;
 		// update in db
 		try {
 			await fetch(`api/users/update?id=${updatedUser.id}`, {
@@ -63,8 +60,10 @@ export default function Game() {
 	const fetchUsers = async () => {
 		// fetch updated users from db and update the store
 		try {
+			isBtnDisabled = true;
 			const response = await fetch('api/users/get');
 			const users = await response.json();
+			isBtnDisabled = false;
 			return users;
 		} catch (error) {
 			console.error(error);
@@ -89,13 +88,13 @@ export default function Game() {
 
 	return (
 		<>
-			<Link href="/">BACK</Link>
+			<Link href="/">HOME</Link>
+			<Link href="/leader-board">LEADERBOARD</Link>
 			<h1>WHEEL OF FURTUNE</h1>
 			<h2>Your name: {selectedUser.name}</h2>
 			<h2>Your points: {selectedUser.points}</h2>
-			<button onClick={handleRollClick}>ROLL THE WHEEL</button>
+			<Button variant='contained' disabled={isBtnDisabled} onClick={handleRollClick}>ROLL THE WHEEL</Button>
 			{result && <p>{result}</p>}
-			<LeaderBoard></LeaderBoard>
 		</>
 	);
 }

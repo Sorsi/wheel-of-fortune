@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Container from '@mui/material/Container';
+import { Typography } from '@mui/material';
+
 
 export default function Home() {
 	const [username, setUsername] = useState('');
 	const dispatch = useDispatch();
-	const selectedUser = useSelector((state) => state.selectedUser);
 	const users = useSelector((state) => state.users);
 	const router = useRouter();
 
@@ -62,44 +66,28 @@ export default function Home() {
 
 	return (
 		<>
-			<h1>WHEEL OF FURTUNE</h1>
-			<h3>Are you brave enough to roll the wheel?</h3>
-			<div className="w-full max-w-xs">
-				<form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
-					<div className="mb-4">
-						<label
-							className="block text-gray-700 text-sm font-bold mb-2"
-							htmlFor="username"
-						>
-							Username
-						</label>
-						<input
-							className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-							name="username"
-							id="username"
-							type="text"
-							value={username}
-							placeholder="Username"
-							onChange={(e) => setUsername(e.target.value)}
-						/>
-					</div>
-					<button
-						className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+			<Container maxWidth="sm">
+			<Typography variant="h1" component="h2">WHEEL OF FURTUNE</Typography>
+			<Typography variant="h5" component="h5">Are you brave enough to roll the wheel?</Typography>
+				<form onSubmit={handleSubmit}>
+					<TextField
+						name="username"
+						id="username"
+						type="text"
+						value={username}
+						placeholder="Your username..."
+						onChange={(e) => setUsername(e.target.value)}
+						variant="outlined"
+					/>
+					<Button
+						disabled={username ? false : true}
+						variant='contained'
 						type="submit"
 					>
 						Play
-					</button>
-					<h1>{username}</h1>
+					</Button>
 				</form>
-			</div>
-			<ul>
-				{users.length > 0 ? (
-					users.map((user, index) => (
-						<li key={index}>{user.name}</li>
-					))
-				) : (<p>no user in db</p>)}
-			</ul>
-			<h5>SELECTED USER IS - {selectedUser.name}</h5>
+			</Container>
 		</>
 	);
 }
