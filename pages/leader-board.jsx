@@ -1,6 +1,7 @@
-import { users } from '@/users-mock';
+import { useSelector } from 'react-redux';
 
 export default function LeaderBoard() {
+	const users = useSelector((state) => state.users);
 	return (
 		<>
 			<h1>LEADER BOARD</h1>
