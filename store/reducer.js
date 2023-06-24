@@ -15,6 +15,11 @@ const rootReducer = (state = initState, action) => {
                 ...state,
                 selectedUser: action.payload,
             };
+        case 'SET_USERS':
+            return {
+                ...state,
+                users: action.payload,
+            };
         default:
             return state;
     }

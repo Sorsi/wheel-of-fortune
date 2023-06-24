@@ -1,20 +1,17 @@
-import prisma from '../app/lib/prisma';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
-export const getStaticProps = async () => {
-	const users = await prisma.User.findMany({});
-	return {
-		props: { users }
-	}
-}
-
-export default function Home({ users }) {
+export default function Home() {
 	const [username, setUsername] = useState('');
 	const dispatch = useDispatch();
 	const selectedUser = useSelector((state) => state.selectedUser);
+	const users = useSelector((state) => state.users);
 	const router = useRouter();
+
+	useEffect(() => {
+		fetchUsers();
+	}, []); // Fetch users when the component mounts
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -27,14 +24,19 @@ export default function Home({ users }) {
 		} else {
 			try {
 				const newUser = { name: username, points: 2000 };
+				const response = await fetch('/api/users/create', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(newUser),
+				});
+				const createdUser = await response.json();
 				dispatch({
 					type: 'ADD_USER',
-					payload: newUser,
+					payload: createdUser,
 				});
-				await fetch('api/users/create', {
-					method: 'POST',
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(newUser),
+				dispatch({
+					type: 'SELECT_USER',
+					payload: { ...createdUser },
 				});
 			} catch (error) {
 				console.error(error);
@@ -42,8 +44,21 @@ export default function Home({ users }) {
 		}
 
 		setUsername('');
-    	router.push('/game');
+		router.push('/game');
 	}
+
+	const fetchUsers = async () => {
+		try {
+			const response = await fetch('/api/users/get');
+			const users = await response.json();
+			dispatch({
+				type: 'SET_USERS',
+				payload: users,
+			});
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
 	return (
 		<>

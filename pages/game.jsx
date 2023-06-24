@@ -7,8 +7,8 @@ export default function Game() {
 	const [result, setResult] = useState('');
 	const selectedUser = useSelector((state) => state.selectedUser);
 	const dispatch = useDispatch();
-	
-	const handleRollClick = () => {
+
+	const handleRollClick = async () => {
 		const randomNumber = generateRandomNumber();
 		let newPoints;
 
@@ -29,14 +29,20 @@ export default function Game() {
 
 		const updatedUser = { ...selectedUser, points: newPoints };
 		updateUserPoints(updatedUser);
-	};
+		const updatedUsers = await fetchUsers(); // Fetch the updated user
 
-	const updateUserPoints = async (updatedUser) => {
-		// update in store
 		dispatch({
 			type: 'SELECT_USER',
 			payload: updatedUser,
 		});
+
+		dispatch({
+			type: 'SET_USERS',
+			payload: updatedUsers, // Update the users in the store
+		});
+	};
+
+	const updateUserPoints = async (updatedUser) => {
 		// update in db
 		try {
 			await fetch(`api/users/update?id=${updatedUser.id}`, {
@@ -44,6 +50,22 @@ export default function Game() {
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ points: updatedUser.points }),
 			});
+			// update in store
+			dispatch({
+				type: 'SELECT_USER',
+				payload: updatedUser,
+			});
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const fetchUsers = async () => {
+		// fetch updated users from db and update the store
+		try {
+			const response = await fetch('api/users/get');
+			const users = await response.json();
+			return users;
 		} catch (error) {
 			console.error(error);
 		}

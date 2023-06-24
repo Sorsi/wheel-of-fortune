@@ -1,5 +1,4 @@
 import prisma from "../../../app/lib/prisma";
-
 export default async function handle(req, res) {
     const { id } = req.query;
     const { points } = req.body;
