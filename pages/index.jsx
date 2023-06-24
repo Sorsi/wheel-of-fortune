@@ -20,7 +20,6 @@ export default function Home({ users }) {
 		e.preventDefault();
 		const userInDb = users.find(user => user.name === username);
 		if (userInDb) {
-			console.log('if: input value is already in db -> ', userInDb);
 			dispatch({
 				type: 'SELECT_USER',
 				payload: { ...userInDb },

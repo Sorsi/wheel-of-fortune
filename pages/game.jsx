@@ -2,10 +2,9 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-export default function Game(user = { name: 'xy', points: 566666 }) {
+export default function Game() {
 	const [result, setResult] = useState('');
 	const selectedUser = useSelector((state) => state.selectedUser);
-	console.log('selected user - >', selectedUser);
 	const dispatch = useDispatch();
 
 	const handleRollClick = () => {
