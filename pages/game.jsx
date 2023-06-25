@@ -12,12 +12,13 @@ export default function Game() {
 	const [result, setResult] = useState('');
 	const selectedUser = useSelector((state) => state.selectedUser);
 	const dispatch = useDispatch();
-	let isBtnDisabled = false;
 	const router = useRouter();
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleRollClick = async () => {
 		const randomNumber = generateRandomNumber();
 		let newPoints;
+		setIsLoading(true);
 
 		switch (randomNumber) {
 			case 1:
@@ -30,7 +31,7 @@ export default function Game() {
 				break;
 			case 3:
 				newPoints = bankrupt();
-				setResult('Bankrupt');
+				setResult('Bankrupt!');
 				break;
 		}
 
@@ -45,7 +46,6 @@ export default function Game() {
 	};
 
 	const updateUserPoints = async (updatedUser) => {
-		isBtnDisabled = true;
 		// update in db
 		try {
 			await fetch(`api/users/update?id=${updatedUser.id}`, {
@@ -53,6 +53,7 @@ export default function Game() {
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ points: updatedUser.points }),
 			});
+			setIsLoading(false);
 			// update in store
 			dispatch({
 				type: 'SELECT_USER',
@@ -66,10 +67,8 @@ export default function Game() {
 	const fetchUsers = async () => {
 		// fetch updated users from db and update the store
 		try {
-			isBtnDisabled = true;
 			const response = await fetch('api/users/get');
 			const users = await response.json();
-			isBtnDisabled = false;
 			return users;
 		} catch (error) {
 			console.error(error);
@@ -102,17 +101,17 @@ export default function Game() {
 
 	return (
 		<>
-			<Box sx={{ flexGrow: 1 }}>
+			<Box sx={{ flexGrow: 1, marginBottom: '16px' }}>
 				<AppBar component="nav" position="static">
 					<Toolbar>
-						<Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+						<Box sx={{ display: { xs: 'block' } }}>
 							<Button 
 								onClick={handleHomeClick}
 								sx={{ color: '#fff' }}>
 								HOME
 							</Button>
 						</Box>
-						<Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+						<Box sx={{ display: { xs: 'block' } }}>
 							<Button 
 								onClick={handleLeaderboardClick}
 								sx={{ color: '#fff' }}>
@@ -126,8 +125,8 @@ export default function Game() {
 				<Typography variant="h2">WHEEL OF FURTUNE</Typography>
 				<Typography variant="h4">Your name: {selectedUser.name}</Typography>
 				<Typography variant="h4">Your points: {selectedUser.points}</Typography>
-				<Button variant='contained' disabled={isBtnDisabled} onClick={handleRollClick}>ROLL THE WHEEL</Button>
-				{result && <p>{result}</p>}
+				<Button variant='contained' disabled={isLoading} onClick={handleRollClick}>ROLL THE WHEEL</Button>
+				{result &&<Typography variant="h2">{result}</Typography>}
 			</Container>
 		</>
 	);

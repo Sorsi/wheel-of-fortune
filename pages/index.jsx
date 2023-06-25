@@ -7,7 +7,6 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
 
-
 export default function Home() {
 	const [username, setUsername] = useState('');
 	const dispatch = useDispatch();

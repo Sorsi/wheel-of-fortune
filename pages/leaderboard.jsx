@@ -9,7 +9,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import { Typography } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
@@ -39,6 +38,7 @@ export default function LeaderBoard() {
 	const users = useSelector((state) => state.users);
 	const dispatch = useDispatch();
 	const router = useRouter();
+	users.sort((a, b) => b.points - a.points); // sort users by their points
 
 	useEffect(() => {
 		const fetchUsers = async () => {
@@ -67,17 +67,17 @@ export default function LeaderBoard() {
 
 	return (
 		<>
-			<Box sx={{ flexGrow: 1 }}>
+			<Box sx={{ flexGrow: 1, marginBottom: '16px'}}>
 				<AppBar component="nav" position="static">
 					<Toolbar>
-						<Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+						<Box sx={{ display: { xs: 'block' } }}>
 							<Button 
 								onClick={handleHomeClick}
 								sx={{ color: '#fff' }}>
 								HOME
 							</Button>
 						</Box>
-						<Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+						<Box sx={{ display: { xs:'block' } }}>
 							<Button 
 								onClick={handleGameClick}
 								sx={{ color: '#fff' }}>
@@ -87,7 +87,6 @@ export default function LeaderBoard() {
 					</Toolbar>
 				</AppBar>
 			</Box>
-			<Typography variant="h2">LEADER BOARD</Typography>
 			<TableContainer component={Paper}>
 				<Table sx={{ minWidth: 650 }} aria-label="simple table">
 					<TableHead>
