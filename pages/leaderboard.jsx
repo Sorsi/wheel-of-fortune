@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
@@ -9,6 +8,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import { Typography } from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
+import { useRouter } from 'next/router';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -33,6 +38,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 export default function LeaderBoard() {
 	const users = useSelector((state) => state.users);
 	const dispatch = useDispatch();
+	const router = useRouter();
 
 	useEffect(() => {
 		const fetchUsers = async () => {
@@ -51,11 +57,37 @@ export default function LeaderBoard() {
 		fetchUsers();
 	}, [dispatch])
 
+	const handleHomeClick = () => {
+		router.push('/');
+	};
+
+	const handleGameClick = () => {
+		router.push('/game');
+	};
+
 	return (
 		<>
-			<Link href="/">HOME</Link>
-			<Link href="/game">GAME</Link>
-			<h1>LEADER BOARD</h1>
+			<Box sx={{ flexGrow: 1 }}>
+				<AppBar component="nav" position="static">
+					<Toolbar>
+						<Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+							<Button 
+								onClick={handleHomeClick}
+								sx={{ color: '#fff' }}>
+								HOME
+							</Button>
+						</Box>
+						<Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+							<Button 
+								onClick={handleGameClick}
+								sx={{ color: '#fff' }}>
+								GAME
+							</Button>
+						</Box>
+					</Toolbar>
+				</AppBar>
+			</Box>
+			<Typography variant="h2">LEADER BOARD</Typography>
 			<TableContainer component={Paper}>
 				<Table sx={{ minWidth: 650 }} aria-label="simple table">
 					<TableHead>
