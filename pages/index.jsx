@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
 
 
@@ -66,11 +67,17 @@ export default function Home() {
 
 	return (
 		<>
-			<Container maxWidth="sm">
-			<Typography variant="h1" component="h2">WHEEL OF FURTUNE</Typography>
-			<Typography variant="h5" component="h5">Are you brave enough to roll the wheel?</Typography>
-				<form onSubmit={handleSubmit}>
+			<Container component="main" maxWidth="xs">
+				<Typography variant="h2">WHEEL OF FURTUNE</Typography>
+				<Typography variant="h5">Are you brave enough to roll the wheel?</Typography>
+				<Box
+					component="form"
+					onSubmit={handleSubmit}
+					sx={{
+						display: 'flex'
+					}}>
 					<TextField
+						margin='normal'
 						name="username"
 						id="username"
 						type="text"
@@ -78,15 +85,23 @@ export default function Home() {
 						placeholder="Your username..."
 						onChange={(e) => setUsername(e.target.value)}
 						variant="outlined"
+						autoFocus
+						sx={{
+							paddingRight: '12px'
+						}}
 					/>
 					<Button
 						disabled={username ? false : true}
 						variant='contained'
 						type="submit"
+						sx={{
+							marginTop: '16px',
+							marginBottom: '8px'
+						}}
 					>
 						Play
 					</Button>
-				</form>
+				</Box>
 			</Container>
 		</>
 	);
