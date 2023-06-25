@@ -67,7 +67,7 @@ export default function Home() {
 	return (
 		<>
 			<Container component="main" maxWidth="xs">
-				<Typography variant="h2">WHEEL OF FURTUNE</Typography>
+				<Typography variant="h2">WHEEL OF FORTUNE</Typography>
 				<Typography variant="h5">Are you brave enough to roll the wheel?</Typography>
 				<Box
 					component="form"
