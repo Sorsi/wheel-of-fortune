@@ -1,13 +1,22 @@
-import { Button } from '@mui/material';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import { Typography } from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import { useRouter } from 'next/router';
 
 export default function Game() {
 	const [result, setResult] = useState('');
 	const selectedUser = useSelector((state) => state.selectedUser);
 	const dispatch = useDispatch();
 	let isBtnDisabled = false;
+	const router = useRouter();
 
 	const handleRollClick = async () => {
 		const randomNumber = generateRandomNumber();
@@ -86,15 +95,43 @@ export default function Game() {
 		return 0;
 	};
 
+	const handleHomeClick = () => {
+		router.push('/');
+	};
+
+	const handleLeaderboardClick = () => {
+		router.push('/leaderboard');
+	};
+
 	return (
 		<>
-			<Link href="/">HOME</Link>
-			<Link href="/leader-board">LEADERBOARD</Link>
-			<h1>WHEEL OF FURTUNE</h1>
-			<h2>Your name: {selectedUser.name}</h2>
-			<h2>Your points: {selectedUser.points}</h2>
-			<Button variant='contained' disabled={isBtnDisabled} onClick={handleRollClick}>ROLL THE WHEEL</Button>
-			{result && <p>{result}</p>}
+			<Box sx={{ flexGrow: 1 }}>
+				<AppBar component="nav" position="static">
+					<Toolbar>
+						<Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+							<Button 
+								onClick={handleHomeClick}
+								sx={{ color: '#fff' }}>
+								HOME
+							</Button>
+						</Box>
+						<Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+							<Button 
+								onClick={handleLeaderboardClick}
+								sx={{ color: '#fff' }}>
+								LEADERBOARD
+							</Button>
+						</Box>
+					</Toolbar>
+				</AppBar>
+			</Box>
+			<Container maxWidth="xs">
+				<Typography variant="h2">WHEEL OF FURTUNE</Typography>
+				<Typography variant="h4">Your name: {selectedUser.name}</Typography>
+				<Typography variant="h4">Your points: {selectedUser.points}</Typography>
+				<Button variant='contained' disabled={isBtnDisabled} onClick={handleRollClick}>ROLL THE WHEEL</Button>
+				{result && <p>{result}</p>}
+			</Container>
 		</>
 	);
 }
