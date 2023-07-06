@@ -6,12 +6,26 @@ import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
+import { useCallback } from 'react';
 
 export default function Home() {
 	const [username, setUsername] = useState('');
 	const dispatch = useDispatch();
 	const users = useSelector((state) => state.users);
 	const router = useRouter();
+
+	const fetchUsers = useCallback(async () => {
+		try {
+			const response = await fetch('/api/users/get');
+			const users = await response.json();
+			dispatch({
+				type: 'SET_USERS',
+				payload: users,
+			});
+		} catch (error) {
+			console.error(error);
+		}
+	}, []);
 
 	useEffect(() => {
 		fetchUsers();
@@ -50,19 +64,6 @@ export default function Home() {
 		setUsername('');
 		router.push('/game');
 	}
-
-	const fetchUsers = async () => {
-		try {
-			const response = await fetch('/api/users/get');
-			const users = await response.json();
-			dispatch({
-				type: 'SET_USERS',
-				payload: users,
-			});
-		} catch (error) {
-			console.error(error);
-		}
-	};
 
 	return (
 		<>
